@@ -206,9 +206,10 @@ int Actividad2_2(){
     m1.edad = 2;
     m1.peso = 10.5f;
 
+
     tipo_mascota m2;
-    char n_raza[] = "Pastor"; //ya se define el siguiente byte para \0 , no sobrepasa de 10 bytes, tiene 8
-    for(int index = 0; index<=sizeof(n_raza); index++){
+    char n_raza[] = "Pastor"; //ya se define el siguiente byte para \0 , no sobrepasa de 10 bytes, tiene 7
+    for(int index = 0; index<=sizeof(m2.raza); index++){
         m2.raza[index] = n_raza[index];
     }
     char n_nombre[] = "Juan"; //ya se define el siguiente byte para \0
@@ -290,7 +291,7 @@ int Actividad4_2(){
                     // se avanzan 7 bytes en la direccion caracter 'e' federic__=__
                     // en esta direccion de memoria se asigna el valor de 61, en ASCII es el signo =
 
-    
+
     printf("letra: %c\n",letra);
     printf("nombre: %.8s\n",nombre);
     printf("p2: %.8s\n",p2);
