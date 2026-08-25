@@ -23,13 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "main.h"
 #include <stdio.h>
-#include "Actividad1.h"
-#include "Actividad2.h"
-#include "Actividad3.h"
-#include "Actividad4.h"
-#include "Actividad5.h"
-#include "Actividad6.h"
-#include "Actividad7.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,6 +95,52 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  //Actividad1();
+
+
+  //Actividad2();
+
+
+  //Actividad3();
+
+
+  Actividad4();
+
+
+  //BEGIN ITEM 5
+
+  int a = 5;
+  int b = elevar_cuadrado(a);
+  //return 0;
+
+  int radio = 5;
+  float area = area_circulo(radio);
+  char pos = neg_or_pos(10);
+  //return 0;
+
+  int c = 1, d = 2;
+  int e = 1, f = 2;
+  int res1, res2;
+
+  res1 = funcion_1(c,d);
+  res2 = funcion_2(&e,&f);
+  //return 0;
+
+  int arreglo5[5]= {1,2,3,4,5};
+  int sum_arreglo;
+
+  sum_arreglo = Actividad3_A5(arreglo5);
+  //return 0;
+
+
+
+  //END ITEM 5
+
+  //Actividad6();
+
+
+  //int enteros[5] = {1,3,4,5,6};
+  //int res = Actividad7(enteros);
 
 
 
@@ -115,14 +155,7 @@ int main(void)
 
   /*User Code*/
 
-  //Actividad1();
-  //Actividad2();
-  //Actividad3();
-  Actividad4();
-  Actividad5();
-  Actividad6();
-  int enteros[5] = {1,3,4,5,6};
-  int res = Actividad7(enteros);
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

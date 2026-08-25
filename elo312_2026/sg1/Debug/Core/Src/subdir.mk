@@ -10,8 +10,6 @@ C_SRCS += \
 ../Core/Src/Actividad3.c \
 ../Core/Src/Actividad4.c \
 ../Core/Src/Actividad5.c \
-../Core/Src/Actividad6.c \
-../Core/Src/Actividad7.c \
 ../Core/Src/main.c \
 ../Core/Src/stm32l4xx_hal_msp.c \
 ../Core/Src/stm32l4xx_it.c \
@@ -25,8 +23,6 @@ OBJS += \
 ./Core/Src/Actividad3.o \
 ./Core/Src/Actividad4.o \
 ./Core/Src/Actividad5.o \
-./Core/Src/Actividad6.o \
-./Core/Src/Actividad7.o \
 ./Core/Src/main.o \
 ./Core/Src/stm32l4xx_hal_msp.o \
 ./Core/Src/stm32l4xx_it.o \
@@ -40,8 +36,6 @@ C_DEPS += \
 ./Core/Src/Actividad3.d \
 ./Core/Src/Actividad4.d \
 ./Core/Src/Actividad5.d \
-./Core/Src/Actividad6.d \
-./Core/Src/Actividad7.d \
 ./Core/Src/main.d \
 ./Core/Src/stm32l4xx_hal_msp.d \
 ./Core/Src/stm32l4xx_it.d \
@@ -57,7 +51,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/Actividad1.cyclo ./Core/Src/Actividad1.d ./Core/Src/Actividad1.o ./Core/Src/Actividad1.su ./Core/Src/Actividad2.cyclo ./Core/Src/Actividad2.d ./Core/Src/Actividad2.o ./Core/Src/Actividad2.su ./Core/Src/Actividad3.cyclo ./Core/Src/Actividad3.d ./Core/Src/Actividad3.o ./Core/Src/Actividad3.su ./Core/Src/Actividad4.cyclo ./Core/Src/Actividad4.d ./Core/Src/Actividad4.o ./Core/Src/Actividad4.su ./Core/Src/Actividad5.cyclo ./Core/Src/Actividad5.d ./Core/Src/Actividad5.o ./Core/Src/Actividad5.su ./Core/Src/Actividad6.cyclo ./Core/Src/Actividad6.d ./Core/Src/Actividad6.o ./Core/Src/Actividad6.su ./Core/Src/Actividad7.cyclo ./Core/Src/Actividad7.d ./Core/Src/Actividad7.o ./Core/Src/Actividad7.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32l4xx_hal_msp.cyclo ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_it.cyclo ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.cyclo ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su
+	-$(RM) ./Core/Src/Actividad1.cyclo ./Core/Src/Actividad1.d ./Core/Src/Actividad1.o ./Core/Src/Actividad1.su ./Core/Src/Actividad2.cyclo ./Core/Src/Actividad2.d ./Core/Src/Actividad2.o ./Core/Src/Actividad2.su ./Core/Src/Actividad3.cyclo ./Core/Src/Actividad3.d ./Core/Src/Actividad3.o ./Core/Src/Actividad3.su ./Core/Src/Actividad4.cyclo ./Core/Src/Actividad4.d ./Core/Src/Actividad4.o ./Core/Src/Actividad4.su ./Core/Src/Actividad5.cyclo ./Core/Src/Actividad5.d ./Core/Src/Actividad5.o ./Core/Src/Actividad5.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32l4xx_hal_msp.cyclo ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_it.cyclo ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.cyclo ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su
 
 .PHONY: clean-Core-2f-Src
 
