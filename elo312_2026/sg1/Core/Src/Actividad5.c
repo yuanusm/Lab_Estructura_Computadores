@@ -6,10 +6,24 @@
  */
 
 #include "Actividad5.h"
-int Actividad5(int *enteros){
-    int res = 0;
-    for(int i = 0; i <= 5; i++){
-        res += *(enteros + i);
-    }
-    return res;
+
+int elevar_cuadrado(int entrada){
+	int salida;
+	salida = entrada * entrada;
+	return salida;
+
+}
+
+float area_circulo(int radio){
+	return PI * radio * radio;
+}
+
+char neg_or_pos(int number){
+	if(number < 0){
+		return 'n';
+	}else if(number > 0){
+		return 'p';
+	}else {
+		return 'z';
+	}
 }

@@ -33,7 +33,12 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-float area_circulo(int radio);
+	#include "Actividad1.h"
+	#include "Actividad2.h"
+	#include "Actividad3.h"
+	#include "Actividad4.h"
+	#include "Actividad5.h"
+	#include "Actividad6.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -72,7 +77,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
-#define PI 3.141592;
+
 
 /* USER CODE END Private defines */
 
