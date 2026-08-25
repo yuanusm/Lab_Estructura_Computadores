@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "BlinkLED.h"
+#include "PulseStart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,6 +58,9 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+
+
+
 /* USER CODE END 0 */
 
 /**
@@ -66,6 +71,16 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+
+	//INICIO BLINK LED
+
+	StartBlinkLED();
+
+	// INICIOPULSO
+
+	int PulseState;
+
+	PulseStart();
 
   /* USER CODE END 1 */
 
@@ -92,8 +107,9 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Initialize leds */
+  /*
   BSP_LED_Init(LED_GREEN);
-
+*/
   /* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
@@ -103,6 +119,17 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
+
+
+	  //BLINK LED
+	  //BIT_SET(GPIOA -> BSRR, 21); //Modificar registro BSRR para levantar el bit 21 del puerto A
+	  //BIT_SET(GPIOA -> BSRR, 5); //Modificar registro BSRR para levantar el bit 5 del puerto A
+	  //BIT_CLEAR(GPIOA -> BSRR, 5);Modificar registro BSRR para bajar el bit 5 del puerto A
+
+
+	  //StatusPULSE
+	  PulseState = BIT_READ(GPIOC -> IDR, 13);
+
 
     /* USER CODE BEGIN 3 */
   }
