@@ -109,18 +109,18 @@ int main(void)
 
   //BEGIN ITEM 5
 
-  int a = 5;
-  int b = elevar_cuadrado(a);
-  //return 0;
-
-  int radio = 5;
-  float area = area_circulo(radio);
-  char pos = neg_or_pos(10);
-  //return 0;
+//  int a = 5;
+//  int b = elevar_cuadrado(a);
+//  //return 0;
+//
+//  int radio = 5;
+//  float area = area_circulo(radio);
+//  char pos = neg_or_pos(10);
+//  //return 0;
 
   int c = 1, d = 2;
   int e = 1, f = 2;
-  int res1, res2;
+  volatile int res1, res2;
 
   res1 = funcion_1(c,d);
   res2 = funcion_2(&e,&f);

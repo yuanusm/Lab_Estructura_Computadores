@@ -61,8 +61,8 @@ all: main-build
 main-build: sg1.elf secondary-outputs
 
 # Tool invocations
-sg1.elf sg1.map: $(OBJS) $(USER_OBJS) C:\Users\viceo\Github\Lab_Estructura_Computadores\elo312_2026\sg1\STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "sg1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\viceo\Github\Lab_Estructura_Computadores\elo312_2026\sg1\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="sg1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+sg1.elf sg1.map: $(OBJS) $(USER_OBJS) C:\Users\viceo\Github\Lab_Estructura_Computadores\sg1\STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "sg1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\viceo\Github\Lab_Estructura_Computadores\sg1\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="sg1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

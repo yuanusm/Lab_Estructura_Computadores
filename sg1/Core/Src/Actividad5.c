@@ -48,7 +48,6 @@ int funcion_1(int x, int y){
 	return x;
 }
 int funcion_2(int *x, int *y){
-
 	*x = *y;
 	return *x;
 }
@@ -56,6 +55,7 @@ int funcion_2(int *x, int *y){
 
 int Actividad3_A5(int *enteros){
     int res = 0;
+
     for(int i = 0; i <= 5; i++){
         res += *(enteros + i);
     }
