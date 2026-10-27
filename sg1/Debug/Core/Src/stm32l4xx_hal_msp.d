@@ -29,7 +29,7 @@ Core/Src/stm32l4xx_hal_msp.o: ../Core/Src/stm32l4xx_hal_msp.c \
  ../Drivers/BSP/STM32L4xx_Nucleo/stm32l4xx_nucleo.h \
  ../Core/Inc/Actividad1.h ../Core/Inc/Actividad2.h \
  ../Core/Inc/Actividad3.h ../Core/Inc/Actividad4.h \
- ../Core/Inc/Actividad5.h
+ ../Core/Inc/Actividad5.h ../Core/Inc/Actividad6.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -64,3 +64,4 @@ Core/Src/stm32l4xx_hal_msp.o: ../Core/Src/stm32l4xx_hal_msp.c \
 ../Core/Inc/Actividad3.h:
 ../Core/Inc/Actividad4.h:
 ../Core/Inc/Actividad5.h:
+../Core/Inc/Actividad6.h:

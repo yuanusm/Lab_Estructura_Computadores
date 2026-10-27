@@ -25,6 +25,5 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Core/Temp \
-Drivers/BSP/STM32L4xx_Nucleo \
 Drivers/STM32L4xx_HAL_Driver/Src \
 

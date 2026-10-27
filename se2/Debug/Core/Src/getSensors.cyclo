@@ -1,0 +1,6 @@
+../Core/Src/getSensors.c:50:7:get_rtc	1
+../Core/Src/getSensors.c:88:7:get_temperature	1
+../Core/Src/getSensors.c:118:7:get_pressure	1
+../Core/Src/getSensors.c:161:7:get_ldr	1
+../Core/Src/getSensors.c:172:6:Config_Sensor	1
+../Core/Src/getSensors.c:205:6:bme_read_calibration	1

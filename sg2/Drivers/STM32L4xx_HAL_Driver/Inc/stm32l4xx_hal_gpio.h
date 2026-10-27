@@ -223,7 +223,7 @@ typedef enum
 #define EXTI_MODE                               (0x3uL << EXTI_MODE_Pos)
 #define EXTI_IT                                 (0x1uL << EXTI_MODE_Pos)
 #define EXTI_EVT                                (0x2uL << EXTI_MODE_Pos)
-#define TRIGGER_MODE_Pos                        20u
+#define TRIGGER_MODE_Pos                         20u
 #define TRIGGER_MODE                            (0x7uL << TRIGGER_MODE_Pos)
 #define TRIGGER_RISING                          (0x1uL << TRIGGER_MODE_Pos)
 #define TRIGGER_FALLING                         (0x2uL << TRIGGER_MODE_Pos)

@@ -1,0 +1,2 @@
+../Core/Src/MaquinaDeEstado.c:52:6:Maquinon	4	static,ignoring_inline_asm
+../Core/Src/MaquinaDeEstado.c:85:6:WriteLedPinPattern	16	static

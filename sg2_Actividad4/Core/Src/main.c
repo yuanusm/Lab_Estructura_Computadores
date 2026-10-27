@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "interrupciones.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define RETARDO 250
+#define RETARDO 1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -65,6 +65,13 @@ void EscribirPines(char LED){
 		  HAL_GPIO_WritePin(GPIOB, LED7_Pin, BIT_READ(LED, 6));
 		  HAL_GPIO_WritePin(GPIOB, LED8_Pin, BIT_READ(LED, 7));
 
+}
+
+
+volatile char Partida = 0;
+
+void PartidaToggle(void){
+	Partida ^= 1;
 }
 /* USER CODE END 0 */
 
@@ -102,7 +109,7 @@ int main(void)
   volatile enum _State State, State_n;
   State = Parpadear;
   State_n = Parpadear;
-  volatile char Partida = 0;
+
   volatile char Boton1,Boton2,boton_start_previo,boton_start;
   boton_start_previo = 1;
   volatile char LED   = 0b11110000;
@@ -120,7 +127,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  boton_start = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	  //boton_start = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 	  Boton1 = HAL_GPIO_ReadPin(Boton1_GPIO_Port, Boton1_Pin);
 	  Boton2 = HAL_GPIO_ReadPin(Boton2_GPIO_Port, Boton2_Pin);
 
@@ -176,6 +183,7 @@ int main(void)
 		  }else if(Boton1 && Boton2){
 			  State_n = TodosParpadean;
 		  }
+
 		  if(State_n != State){
 			  State = State_n;
 			  LED = LED_state;
@@ -188,12 +196,12 @@ int main(void)
 
 
 
-	  if(boton_start_previo && (!boton_start)){
-		  BIT_TOGGLE(Partida, 0);
+	  //if(boton_start_previo && (!boton_start)){
+		//  BIT_TOGGLE(Partida, 0);
 		  //LED = LED_state;
 		  //EscribirPines(LED_state);
-	  }
-	  boton_start_previo = boton_start;
+	  //}
+	  //boton_start_previo = boton_start;
 
 
 

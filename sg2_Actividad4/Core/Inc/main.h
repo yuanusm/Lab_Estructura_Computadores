@@ -59,8 +59,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BUTTON_Pin GPIO_PIN_13
-#define BUTTON_GPIO_Port GPIOC
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
@@ -97,6 +95,9 @@ void Error_Handler(void);
 #define BIT_CLEAR(reg, n)   ( (reg) &= ~(1u << (n)) )
 #define BIT_TOGGLE(reg, n)  ( (reg) ^= (1u << (n)) )
 #define BIT_READ(reg, n)    ( ((reg) >> (n)) & (1u) )
+
+void PartidaToggle(void);
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

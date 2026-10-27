@@ -10,4 +10,5 @@
 
 void Actividad3(void);
 
+void presionarboton(void);
 #endif /* INC_ACTIVIDAD3_H_ */

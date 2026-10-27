@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -39,7 +40,6 @@
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
-
 /* USER CODE BEGIN PM */
 
 /* USER CODE END PM */
@@ -88,9 +88,10 @@ int main(void)
 
   /* USER CODE END SysInit */
 
-	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	/* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_TIM6_Init();
+  /* USER CODE BEGIN 2 */
 
 	/* Initialize leds */
 	//BSP_LED_Init(LED_GREEN);
@@ -102,9 +103,7 @@ int main(void)
 	//Read_GPIO_C_13();
 	//MaquinaDeEstado();
 	Actividad3();
-	/* USER CODE END 2 */
-
-
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

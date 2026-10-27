@@ -1,0 +1,2 @@
+../Core/Src/Compensada.c:19:14:BME280_compensate_T_int32	1
+../Core/Src/Compensada.c:32:14:BME280_compensate_P_int32	3

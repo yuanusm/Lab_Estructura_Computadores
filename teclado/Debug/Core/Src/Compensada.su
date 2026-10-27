@@ -1,0 +1,2 @@
+../Core/Src/Compensada.c:10:14:BME280_compensate_T_int32	32	static
+../Core/Src/Compensada.c:23:14:BME280_compensate_P_int32	32	static
