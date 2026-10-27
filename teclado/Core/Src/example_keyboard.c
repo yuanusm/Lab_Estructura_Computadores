@@ -117,22 +117,49 @@ void example_keyboard_1(uint8_t key)
 
 
   switch(key){
-  case 1:display_set_pos(0x00);;
+  case 1:
+	  	  display_set_pos(0x00);;
   	  	  display_clear();
-  	  	  printf("AñoD:%u\nAño:%u\nMesD:%u\nMes:%u\nDiaD:%u\nDia%u\nHoraD%u\nHora%u\nMinutoD:%u\nMinuto:%u\nSegD:%u\nSeg:%u \n\r", AnuelBr, anuel,Decmes,mehs,Dechfecha,ufecha,Dechr,hr,Decmin,min,Decseg,seg);
-
+  	  	printf("%u%u-%u%u-%u%u %u%u:%u%u",
+  	  	       Dechfecha, ufecha,
+  	  	       Decmes, mehs,
+  	  	       AnuelBr, anuel,
+  	  	       Dechr, hr,
+  	  	       Decmin, min);
 	  break;
-  case 2:display_set_pos(0x00);;
+  case 2:
+	  	  display_set_pos(0x00);;
 	  	  display_clear();
-	  	  printf("AñoD:%u\nAño:%u\nMesD:%u\nMes:%u\nDiaD:%u\nDia%u\nHoraD%u\nHora%u\nMinutoD:%u\nMinuto:%u\nSegD:%u\nSeg:%u  %03u lux\n\r", AnuelBr, anuel,Decmes,mehs,Dechfecha,ufecha,Dechr,hr,Decmin,min,Decseg,seg, (uint16_t)get_ldr());
-
-
-
+	  	  printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%u hPa",
+	  		  	  	  	       Dechfecha, ufecha,
+	  		  	  	  	       Decmes, mehs,
+	  		  	  	  	       AnuelBr, anuel,
+	  		  	  	  	       Dechr, hr,
+	  		  	  	  	       Decmin, min,
+							   presion_compensada);
 	  break;
   case 3:
+	  	  display_set_pos(0x00);;
+	  	  display_clear();
+	  	  printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%u lux",
+	  		  	  	  	       Dechfecha, ufecha,
+	  		  	  	  	       Decmes, mehs,
+	  		  	  	  	       AnuelBr, anuel,
+	  		  	  	  	       Dechr, hr,
+	  		  	  	  	       Decmin, min, (uint32_t)get_ldr());
 	  break;
   case 5:
-	  break;
+	  	  display_set_pos(0x00);;
+	  	  display_clear();
+	  	printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%u hPa %u lux",
+	  		  		  	  	  	       Dechfecha, ufecha,
+	  		  		  	  	  	       Decmes, mehs,
+	  		  		  	  	  	       AnuelBr, anuel,
+	  		  		  	  	  	       Dechr, hr,
+	  		  		  	  	  	       Decmin, min,
+									   presion_compensada,
+									   (uint32_t)get_ldr());
+	  	break;
   default:
 	  break;
   }
