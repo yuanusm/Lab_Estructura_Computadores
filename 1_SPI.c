@@ -7,6 +7,7 @@
  *           Prescaler = 64 (80 MHz / 64 = 1.25 MHz),
  *           CPOL = Low, CPHA = 1 Edge  (modo SPI 0),
  *           NSS = Software.  Pines: PA5 = SCK, PA6 = MISO, PA7 = MOSI.
+ *   - PB6: GPIO_Output (label BME_CS), nivel inicial High.
  *   - USART2 (ST-LINK Virtual COM): Asynchronous, 115200 8N1 (PA2 = TX, PA3 = RX).
  *
  * Conexiones (módulo GY-BME280-3.3, alimentar con 3.3 V):
