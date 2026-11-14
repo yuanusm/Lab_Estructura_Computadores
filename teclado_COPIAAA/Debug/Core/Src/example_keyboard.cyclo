@@ -1,0 +1,4 @@
+../Core/Src/example_keyboard.c:98:6:example_keyboard_1	7
+../Core/Src/example_keyboard.c:119:6:example_keyboard_check_key_isr	2
+../Core/Src/example_keyboard.c:141:7:get_ldr	1
+../Core/Src/example_keyboard.c:157:6:Actualizar_Display	12

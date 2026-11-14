@@ -1,0 +1,6 @@
+../Core/Src/keyboard.c:76:6:keyboard_init	4	static
+../Core/Src/keyboard.c:84:6:keyboard_deinit	4	static
+../Core/Src/keyboard.c:92:6:keyboard_tec_matrix	24	static
+../Core/Src/keyboard.c:199:6:_keyboard_button_action	16	static
+../Core/Src/keyboard.c:213:6:_set_output_port	56	static
+../Core/Src/keyboard.c:296:6:example_keyboard_2	24	static

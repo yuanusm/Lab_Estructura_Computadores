@@ -41,6 +41,8 @@
 
 /*--->> Private Data Types <<-------------------------------------------------*/
 
+static const char keymap[16] = {'1','2','3','A','4','5','6','B',
+                                '7','8','9','C','*','0','#','D'};
 
 /*--->> Private Data <<-------------------------------------------------------*/
 static uint8_t butmat_clk = 0;         /*!< Cuántas interrupciones se lleva presionado el boton*/
@@ -62,7 +64,7 @@ static data_pin_t tec_data_pin[8] = { {TEC0_GPIO_Port, TEC0_Pin},
                                       };
 
 /*--->> Private Prototypes <<-------------------------------------------------*/
-static void _keyboard_button_action(uint8_t key);
+static void _keyboard_button_action(uint8_t key,uint8_t key_prev);
 static void _set_output_port(uint8_t iteration);
 
 
@@ -163,13 +165,15 @@ void keyboard_tec_matrix(void)
     if (butmat != butmat_prev)               // botón presionado es distinto al anterior?
     {
 
-    	if(butmat==14 && butmat_prev==12)
+    	/*if(butmat==14 && butmat_prev==12){
     		bienvenida();
-
+    		butmat=0;
+    	}*/
+    	_keyboard_button_action(butmat, butmat_prev);
 
       butmat_prev = butmat;
       butmat_clk = 0;
-      _keyboard_button_action(butmat);
+
     }
     else
     {
@@ -192,9 +196,11 @@ void keyboard_tec_matrix(void)
  * @retval:       void
  * @param tecla:  Tecla presionada
  */
-void _keyboard_button_action(uint8_t tecla)
+void _keyboard_button_action(uint8_t tecla,uint8_t key_prev)
 {
-  example_keyboard_1(tecla);
+
+	example_keyboard_2(tecla);
+	example_keyboard_1(tecla,key_prev);
 
 }
 
@@ -260,7 +266,7 @@ void _set_output_port(uint8_t iteration)
 
 
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
 
   GPIO_InitStruct.Pin = kb_in[0]->gpio_pin;
   HAL_GPIO_Init(kb_in[0]->gpio_port, &GPIO_InitStruct);
@@ -278,5 +284,18 @@ void _set_output_port(uint8_t iteration)
 
   HAL_GPIO_WritePin(kb_out->gpio_port, kb_out->gpio_pin, GPIO_PIN_RESET);
 
+}
+
+
+
+
+
+
+
+
+void example_keyboard_2(uint8_t key)
+{
+  char c = keymap[key];
+  HAL_UART_Transmit(&huart2, (uint8_t*)&c, 1, 1000);
 }
 

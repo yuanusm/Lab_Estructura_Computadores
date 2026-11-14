@@ -36,16 +36,7 @@
 
 
 
-uint8_t RTCConfig[9] = {0x00,
-						Reg0,
-						Reg1,
-						Reg2,
-						Reg3,
-						Reg4,
-						Reg5,
-						Reg6,
-						Reg7
-};
+
 
 
 uint8_t RTCRead[7];
@@ -86,8 +77,9 @@ int16_t dig_T2, dig_T3;
 uint16_t dig_P1;
 int16_t dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
 
-
+uint8_t Estado=0;
 uint32_t lecturaADC;
+uint8_t flag_buffer_teclado;
 float resultado;
 /*--->> Private Constants <<--------------------------------------------------*/
 
@@ -103,93 +95,25 @@ float resultado;
 
 /*--->> API Implementation <<-------------------------------------------------*/
 
-void example_keyboard_1(uint8_t key)
+void example_keyboard_1(uint8_t key,uint8_t key_prev)
 {
-  static uint8_t tx_buffer[20];
-  if(key < 4)
-  {
-    HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-  }
+	static uint8_t tx_buffer[20];
+
+	if(key < 4){
+		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	}
 
 
+	if(key ==12 && key_prev!=0xff){
+		flag_buffer_teclado = 0;
+		HAL_TIM_Base_Stop_IT(&htim7);
+		__HAL_TIM_SET_COUNTER(&htim7, 0);
+		HAL_TIM_Base_Start_IT(&htim7);
 
-
-
-
-  switch(key){
-  case 1:
-	  	  display_set_pos(0x00);;
-  	  	  display_clear();
-  	  	printf("%u%u-%u%u-%u%u %u%u:%u%u",
-  	  	       Dechfecha, ufecha,
-  	  	       Decmes, mehs,
-  	  	       AnuelBr, anuel,
-  	  	       Dechr, hr,
-  	  	       Decmin, min);
-	  break;
-  case 2:
-	  	  display_set_pos(0x00);;
-	  	  display_clear();
-	  	  printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%u hPa",
-	  		  	  	  	       Dechfecha, ufecha,
-	  		  	  	  	       Decmes, mehs,
-	  		  	  	  	       AnuelBr, anuel,
-	  		  	  	  	       Dechr, hr,
-	  		  	  	  	       Decmin, min,
-							   presion_compensada);
-	  break;
-  case 3:
-	  	  display_set_pos(0x00);;
-	  	  display_clear();
-	  	  printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%u lux",
-	  		  	  	  	       Dechfecha, ufecha,
-	  		  	  	  	       Decmes, mehs,
-	  		  	  	  	       AnuelBr, anuel,
-	  		  	  	  	       Dechr, hr,
-	  		  	  	  	       Decmin, min, (uint32_t)get_ldr());
-	  break;
-  case 5:
-	  	  display_set_pos(0x00);;
-	  	  display_clear();
-	  	printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%u hPa %u lux",
-	  		  		  	  	  	       Dechfecha, ufecha,
-	  		  		  	  	  	       Decmes, mehs,
-	  		  		  	  	  	       AnuelBr, anuel,
-	  		  		  	  	  	       Dechr, hr,
-	  		  		  	  	  	       Decmin, min,
-									   presion_compensada,
-									   (uint32_t)get_ldr());
-	  	break;
-  default:
-	  break;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //snprintf((char*)tx_buffer, 20, "Tecla: %d\n", key);
-
-  //HAL_UART_Transmit(&huart2, tx_buffer, strlen((const char*)tx_buffer),1000);
-
+	}else if(key==14 && key_prev==12 && !flag_buffer_teclado){
+		Estado = 20;
+	}else
+		Estado = key;
 }
 
 void example_keyboard_check_key_isr()
@@ -277,4 +201,68 @@ void Actualizar_Display(void){
 			  //printf("20%u%u-%u%u-%u%u %u%u:%u%u:%u%u Presion [hPa]: %.1f\n\r", AnuelBr, anuel,Decmes,mehs,Dechfecha,ufecha,Dechr,hr,Decmin,min,Decseg,seg, (float)presion_compensada/100.f);//Escribe en la consola serial
 			   //Baja la flag del timer , asi permite que dentro de 1000ms se vuelva a activar
 			  //__enable_irq();
+
+			  switch(Estado){
+			    case 0:
+			  	  	  display_set_pos(0x00);
+			    	  	  display_clear();
+			    	  	printf("%u%u-%u%u-%u%u %u%u:%u%u",
+			    	  	       Dechfecha, ufecha,
+			    	  	       Decmes, mehs,
+			    	  	       AnuelBr, anuel,
+			    	  	       Dechr, hr,
+			    	  	       Decmin, min);
+
+			  	  break;
+			    case 1:
+			  	  	  display_set_pos(0x00);
+			  	  	  display_clear();
+			  	  	  printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%04u hPa",
+			  	  		  	  	  	       Dechfecha, ufecha,
+			  	  		  	  	  	       Decmes, mehs,
+			  	  		  	  	  	       AnuelBr, anuel,
+			  	  		  	  	  	       Dechr, hr,
+			  	  		  	  	  	       Decmin, min,
+			  							   presion_compensada/100);
+
+			  	  break;
+			    case 2:
+			  	  	  display_set_pos(0x00);
+			  	  	  display_clear();
+			  	  	  printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%04u Lx",
+			  	  		  	  	  	       Dechfecha, ufecha,
+			  	  		  	  	  	       Decmes, mehs,
+			  	  		  	  	  	       AnuelBr, anuel,
+			  	  		  	  	  	       Dechr, hr,
+			  	  		  	  	  	       Decmin, min, (uint32_t)get_ldr());
+			  	  break;
+			    case 4:
+			  	  	  display_set_pos(0x00);
+			  	  	  display_clear();
+			  	  	printf("%u%u-%u%u-%u%u %u%u:%u%u\n\r%04u hPa %03u lx",
+			  	  		  		  	  	  	       Dechfecha, ufecha,
+			  	  		  		  	  	  	       Decmes, mehs,
+			  	  		  		  	  	  	       AnuelBr, anuel,
+			  	  		  		  	  	  	       Dechr, hr,
+			  	  		  		  	  	  	       Decmin, min,
+			  									   presion_compensada/100,
+			  									   (uint32_t)get_ldr());
+			  	  	break;
+			    case 20:
+			    	bienvenida();
+			    	break;
+
+			    default:
+			    	display_clear();
+			    	display_set_pos(0x00);
+			    	printf("  Comando\n\r Desconocido");
+			    	//HAL_Delay(1000);
+			    	//display_clear();
+			    	//display_set_pos(0x00);
+			    	//printf("     ELO312     \n\r     Grupo 2");
+
+			  	  break;
+			    }
+
+
 }

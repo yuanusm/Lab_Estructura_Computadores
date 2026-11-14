@@ -387,7 +387,7 @@ void display_lcd_scroll_up(void)
  **/
 void display_test_write_cgram_ms(void)
 {
-  display_register_character(0x1, new_char0);
+  display_register_character(0x2, new_char0);
 }
 
 /**

@@ -30,8 +30,8 @@
 * @param tecla    : La tecla presionada.
 * @retval         : void
 */
-void example_keyboard_1(uint8_t tecla);
-
+void example_keyboard_1(uint8_t tecla,uint8_t key_prev);
+extern uint8_t flag_buffer_teclado;
 /**
  * @brief         : Esta función debe ser invocada desde SysTick_Handler() o
  * 				    desde una interrupción cada 1 [ms]

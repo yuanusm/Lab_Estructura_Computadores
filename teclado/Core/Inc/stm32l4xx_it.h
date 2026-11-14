@@ -60,6 +60,7 @@ void I2C2_EV_IRQHandler(void);
 void SPI2_IRQHandler(void);
 void ADC3_IRQHandler(void);
 void TIM6_DAC_IRQHandler(void);
+void TIM7_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

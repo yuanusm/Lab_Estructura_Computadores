@@ -1,4 +1,0 @@
-../Core/Src/example_keyboard.c:106:6:example_keyboard_1	96	static
-../Core/Src/example_keyboard.c:195:6:example_keyboard_check_key_isr	8	static
-../Core/Src/example_keyboard.c:217:7:get_ldr	24	static
-../Core/Src/example_keyboard.c:233:6:Actualizar_Display	24	static

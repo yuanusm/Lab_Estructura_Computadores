@@ -33,6 +33,8 @@
 * @brief        : Inicializa el teclado.
 * @retval       : void
 */
+#include <stdint.h>
+
 void keyboard_init();
 
 /**
@@ -40,7 +42,7 @@ void keyboard_init();
 * @retval       : void
 */
 void keyboard_deinit();
-
+void example_keyboard_2(uint8_t key);
 /**
  * @brief       : Lee la matriz de botones y
  * 				  llama a la función keyboard_button_action() cuando

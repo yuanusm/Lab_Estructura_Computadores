@@ -24,5 +24,11 @@ C_DEPS :=
 SUBDIRS := \
 Core/Src \
 Core/Startup \
+Drivers/BSP/Components/hts221 \
+Drivers/BSP/Components/lps22hb \
+Drivers/BSP/Components/lsm303agr \
+Drivers/BSP/Components/lsm6dsl \
+Drivers/BSP/IKS01A2 \
 Drivers/STM32L4xx_HAL_Driver/Src \
+lps22hb \
 

@@ -60,6 +60,8 @@ uint8_t acumulador_actualizacion_display = 0;
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -101,44 +103,51 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C2_Init();
   MX_ADC3_Init();
-  MX_SPI2_Init();
+
   MX_TIM6_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim6);
-	CS_Enable();
-	HAL_Delay(100);
+
+
+	HAL_I2C_Init(&hi2c2);
+	//HAL_I2C_Master_Transmit(&hi2c2, SlaveAddW, RTCConfig, 9, 100);
+
 
 	uint8_t tx_id[2] = {0xD0 | 0x80, 0x00}; // 0xD0|0x80 = 0xD0 (la dirección de ID del BME280 es 0xD0, bit7 ya es 1)
 	uint8_t rx_id[2] = {0};
 
-	 Config_BMX280();
 	keyboard_init();
 	//snprintf((char*)tx_buffer, 20, "Iniciando teclado\n");
-	HAL_UART_Transmit(&huart2, tx_buffer, strlen((const char*)tx_buffer),1000);
+//	HAL_UART_Transmit(&huart2, tx_buffer, strlen((const char*)tx_buffer),1000);
 
-	setvbuf(stdout, (char*)NULL, _IONBF, 0);
+//	setvbuf(stdout, (char*)NULL, _IONBF, 0);
 	display_init();
-	//display_test_write_cgram_ms();
-	bienvenida();
-
-	printf("     ELO312     \n\r     Grupo 2");
-	printf("%c", 0x02);
+//	display_test_write_cgram_ms();
+//	bienvenida();
+//	display_clear();
+//		display_set_pos(0x00);
+//		printf("     ELO312     \n\rGrupo 2");
+//		printf("%c %c %c", 0x02,0x02,0x02);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(ActualizacionTeclado){
-		  keyboard_tec_matrix(); //funcion teclao cada 10[ms]
 
-		  if((++acumulador_actualizacion_display)==100){
-			  acumulador_actualizacion_display=0;
-			  Actualizar_Display();
-		  }
-
-		  ActualizacionTeclado=0;
-	  }
+	  IKS01A2_MOTION_SENSOR_Axes_t local_mag = Magneto_Sensor_Handler(IKS01A2_LSM303AGR_MAG_0);
+	  	  printf("Magnetometro: x = %d y = %d z = %d\n",(int)local_mag.x,(int)local_mag.y,(int)local_mag.z);
+//	  if(ActualizacionTeclado){
+//		  keyboard_tec_matrix(); //funcion teclao cada 10[ms]
+//
+//		  if((++acumulador_actualizacion_display)==100){
+//			  acumulador_actualizacion_display=0;
+//			  Actualizar_Display();
+//		  }
+//
+//		  ActualizacionTeclado=0;
+//	  }
 
 
 
@@ -199,14 +208,24 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void bienvenida(void){
-	display_set_pos(0x00);
-		printf("  Sistema de   \n\rmedicion ELO312");
-		HAL_Delay(2000);//message de vienbenida 2024
-		display_clear();
-
-}
-
+//void bienvenida(void){
+//	display_clear();
+//	display_set_pos(0x00);
+//	printf("  Sistema de   \n\rmedicion ELO312");
+//	HAL_Delay(2000);
+//
+//	//message de vienbenida 2024
+//		//
+//
+//}
+//int _write(int fd, char* ptr, int len)
+//{
+//    for(int i = 0; i < len ; i++)
+//    {
+//      display_putchar(ptr[i]);
+//    }
+//    return len;
+//}
 
 /* USER CODE END 4 */
 

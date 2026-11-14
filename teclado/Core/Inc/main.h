@@ -58,15 +58,7 @@ void bienvenida(void);
 void Actualizar_Display(void);
 #define SlaveAddR  0b11010001
 #define SlaveAddW  0b11010000
-#define AddressReg1 0x00
-#define Reg0 (0<<7u | 3u<<4u | 3u)//00110011   /// CH [7] | Decseg[6-4] | Seg [3-0]
-#define Reg1 ( 1u<<4u | 6u)	  /// x[7] | DecMin[6-4] | Min[3-0]
-#define Reg2 ( 0<<6u | 1u<<4u | 5)	  /// x[7] | 12-24 hrs_set [6] (24low) | DecHora[5-4] AM-PM[5] | Hora[3-0]
-#define Reg3 ( 0b1)	  /// X[7-3] | Dia [2-0]
-#define Reg4 ( 2<<4 | 9)  /// X[7-6] | DecFecha [5-4] | Fecha[3-0]
-#define Reg5 (0<<4 | 9)   /// X[7-5] | DecMes [4] | Mes[3-0]
-#define Reg6 ( 2<<4 | 6)   /// DecAño [7:4] | Año[3-0]
-#define Reg7 0b00000000   /// Square/out config
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

@@ -1,0 +1,8 @@
+../Core/Src/utils.c:12:6:floatToInt	2
+../Core/Src/utils.c:33:6:IKS01A2_init	1
+../Core/Src/utils.c:50:30:Accelero_Sensor_Handler	2
+../Core/Src/utils.c:64:30:Gyro_Sensor_Handler	2
+../Core/Src/utils.c:78:30:Magneto_Sensor_Handler	2
+../Core/Src/utils.c:93:21:Temp_Sensor_Handler	2
+../Core/Src/utils.c:109:21:Press_Sensor_Handler	2
+../Core/Src/utils.c:126:21:Hum_Sensor_Handler	2

@@ -29,4 +29,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>lps22hb</name>
+			<type>2</type>
+			<location>C:/Users/Saile/Desktop/Github/elo312_2026/MEMS/Drivers/BSP/Components/lps22hb</location>
+		</link>
+	</linkedResources>
 </projectDescription>
