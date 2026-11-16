@@ -262,6 +262,7 @@ int main(void)
 	flag_refresco_mundo = 0;
 	flag_timer_100 = 0;
 	flag_conteo = 0;
+	uint8_t Refresh =0;
 
 	setvbuf(stdout, (char*)NULL, _IONBF, 0); //pareciera que no sirve esta linea dado el poco entendimiento que tenemos acerca de ella pero sin esto el codigo no funciona para la escritura de caracteres
 	uint8_t GAMEOVER =0;
@@ -303,279 +304,282 @@ int main(void)
 		/* USER CODE BEGIN 3 */
 
 		if(GAMEOVER){
-			display_clear();
-			printf("Score:%d\n\rGAME OVER",PremiosConseguidos);
-		}
-
-
-		if(flag_timer_data){
-			if(comando=='\n' || comando=='\r' ||indice == 10){
-
-				for(uint8_t i = 0; i<10 ;i++){
-					comando_recibido[i] = buffer[i];
-					buffer[i] = 0;
-				}
-
-				indice = 0;
-
+			if(!Refresh){
+				display_clear();
+				printf("Score:%d\n\rGAME OVER",PremiosConseguidos);
+				Refresh = (++Refresh) % 1000;
 			}
-			flag_timer_data = 0;
-		}
+		} if (GAMEOVER == 0){
 
 
-		if(flag_timer_100){
+			if(flag_timer_data){
+				if(comando=='\n' || comando=='\r' ||indice == 10){
 
-
-			++contador_segundos;
-
-
-
-			if(contador_terceros++>=600){
-				GAMEOVER=1;
-				contador_terceros=0;
-			}
-
-
-
-
-			lectura_acelerometro_1 = Accelero_Sensor_Handler(IKS01A2_LSM6DSL_0);
-			lectura_acelerometro_2 = Accelero_Sensor_Handler(IKS01A2_LSM303AGR_ACC_0);
-			valorz = ((float)lectura_acelerometro_1.z+(float)lectura_acelerometro_2.z)/200.0f;
-			valory = ((float)lectura_acelerometro_1.y-(float)lectura_acelerometro_2.y)/200.0f;
-			valorx = (-(float)lectura_acelerometro_1.x-(float)lectura_acelerometro_2.x)/200.0f;
-
-			if(valory>=3.0f){ // arriba es Y positivo
-				PersonajeArribaAbajo = 1;
-			}else
-				if(valory<1.0f && valory>-1.0f){
-					PersonajeArribaAbajo = 0;
-				}else
-					if(valory<=-3.0f){
-						PersonajeArribaAbajo = -1;
+					for(uint8_t i = 0; i<10 ;i++){
+						comando_recibido[i] = buffer[i];
+						buffer[i] = 0;
 					}
 
-			if(valorx>=3.0f){ // izquierda es X positivo
-				PersonajeIzquierdaDerecha = -1;
-			}else
-				if(valorx<1.0f && valorx>-1.0f){
-					PersonajeIzquierdaDerecha = 0;
+					indice = 0;
+
+				}
+				flag_timer_data = 0;
+			}
+
+
+			if(flag_timer_100){
+
+
+				++contador_segundos;
+
+
+
+				if(contador_terceros++>=600){
+					GAMEOVER=1;
+					contador_terceros=0;
+				}
+
+
+
+
+				lectura_acelerometro_1 = Accelero_Sensor_Handler(IKS01A2_LSM6DSL_0);
+				lectura_acelerometro_2 = Accelero_Sensor_Handler(IKS01A2_LSM303AGR_ACC_0);
+				valorz = ((float)lectura_acelerometro_1.z+(float)lectura_acelerometro_2.z)/200.0f;
+				valory = ((float)lectura_acelerometro_1.y-(float)lectura_acelerometro_2.y)/200.0f;
+				valorx = (-(float)lectura_acelerometro_1.x-(float)lectura_acelerometro_2.x)/200.0f;
+
+				if(valory>=3.0f){ // arriba es Y positivo
+					PersonajeArribaAbajo = 1;
 				}else
-					if(valorx<=-3.0f){
-						PersonajeIzquierdaDerecha = 1;
+					if(valory<1.0f && valory>-1.0f){
+						PersonajeArribaAbajo = 0;
+					}else
+						if(valory<=-3.0f){
+							PersonajeArribaAbajo = -1;
+						}
+
+				if(valorx>=3.0f){ // izquierda es X positivo
+					PersonajeIzquierdaDerecha = -1;
+				}else
+					if(valorx<1.0f && valorx>-1.0f){
+						PersonajeIzquierdaDerecha = 0;
+					}else
+						if(valorx<=-3.0f){
+							PersonajeIzquierdaDerecha = 1;
+						}
+
+
+
+
+				if(contador_segundos==Dificultad_Establecida){
+					flag_refresco_mundo = 1;
+					contador_segundos = 0;
+				}
+				if(contador_terceros == 30 ){
+					//flag_pantalla = 0;
+					contador_terceros = 0;
+				}
+				flag_timer_100 = 0;
+
+
+				if(!strcmp(comando_recibido,"S\n")){ // Comando S de Start game
+
+					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					//flag_conteo = 1; //Flags de iniciar calibracion
+					//indice_conteo = 0;
+
+					limpiar_buffer_comando();
+
+
+				}else if(!strcmp(comando_recibido,"R\n")){ // Comando R de reiniciar
+
+					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					HAL_NVIC_SystemReset();
+
+					limpiar_buffer_comando();
+
+				}else if(!strcmp(comando_recibido,"E\n")){ // Comando S de Start game
+
+					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					Dificultad_Establecida = facil;
+					contador_segundos = 0;
+					limpiar_buffer_comando();
+
+
+				}else if(!strcmp(comando_recibido,"M\n")){ // Comando S de Start game
+
+					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					Dificultad_Establecida = medio;
+					contador_segundos = 0;
+					limpiar_buffer_comando();
+
+
+				}else if(!strcmp(comando_recibido,"H\n")){ // Comando S de Start game
+
+					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					Dificultad_Establecida = dificil;
+					contador_segundos = 0;
+					limpiar_buffer_comando();
+
+
+				} else if(strcmp(comando_recibido,"\0\0\0\0") ){
+
+					sprintf(mensaje, "Mensaje Desconocido \n\r%c",0);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+					limpiar_buffer_comando();
+				}
+
+
+
+
+				//REFRESCO PERSONAJE  BEGIN
+
+				posicionPersonajeY=PersonajeArribaAbajo==1? 1 : PersonajeArribaAbajo==-1 ? 0 : posicionPersonajeY;
+
+
+				//			if((PersonajeIzquierdaDerecha == 0) || (PersonajeIzquierdaDerecha!=PersonajeIzquierdaDerecha_pasada)){
+				//				contadorx = 0;
+				//			}else if (PersonajeIzquierdaDerecha==PersonajeIzquierdaDerecha_pasada){
+				//				contadorx +=1;
+				//				contadorx= contadorx%6;
+				//			}
+
+				if(contadorx++ >= 3){
+					posicionPersonajeX += PersonajeIzquierdaDerecha;
+					posicionPersonajeX =  (posicionPersonajeX%16) ;
+					contadorx=0;
+				}
+
+				PersonajeIzquierdaDerecha_pasada = PersonajeIzquierdaDerecha;
+
+
+				if(posicionPersonajeY){
+					display_set_pos(0x00 + posicionPersonajeX_pasada );
+					display_send_data(' ');//d32
+					if(posicionPersonajeY != posicionPersonajeY_pasada){
+						display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_send_data(' ');//d32
 					}
+					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
+					respuesta = display_get_data();
+					PremiosConseguidos+= (respuesta=='P');
+					Vidas-= (respuesta=='L');
+					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
+					display_send_data(0);
 
-
-
-
-			if(contador_segundos==Dificultad_Establecida){
-				flag_refresco_mundo = 1;
-				contador_segundos = 0;
-			}
-			if(contador_terceros == 30 ){
-				//flag_pantalla = 0;
-				contador_terceros = 0;
-			}
-			flag_timer_100 = 0;
-
-
-			if(!strcmp(comando_recibido,"S\n")){ // Comando S de Start game
-
-				sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				//flag_conteo = 1; //Flags de iniciar calibracion
-				//indice_conteo = 0;
-
-				limpiar_buffer_comando();
-
-
-			}else if(!strcmp(comando_recibido,"R\n")){ // Comando R de reiniciar
-
-				sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				HAL_NVIC_SystemReset();
-
-				limpiar_buffer_comando();
-
-			}else if(!strcmp(comando_recibido,"E\n")){ // Comando S de Start game
-
-				sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				Dificultad_Establecida = facil;
-				contador_segundos = 0;
-				limpiar_buffer_comando();
-
-
-			}else if(!strcmp(comando_recibido,"M\n")){ // Comando S de Start game
-
-				sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				Dificultad_Establecida = medio;
-				contador_segundos = 0;
-				limpiar_buffer_comando();
-
-
-			}else if(!strcmp(comando_recibido,"H\n")){ // Comando S de Start game
-
-				sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				Dificultad_Establecida = dificil;
-				contador_segundos = 0;
-				limpiar_buffer_comando();
-
-
-			} else if(strcmp(comando_recibido,"\0\0\0\0") ){
-
-				sprintf(mensaje, "Mensaje Desconocido \n\r%c",0);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-				limpiar_buffer_comando();
-			}
-
-
-
-
-			//REFRESCO PERSONAJE  BEGIN
-
-			posicionPersonajeY=PersonajeArribaAbajo==1? 1 : PersonajeArribaAbajo==-1 ? 0 : posicionPersonajeY;
-
-
-			//			if((PersonajeIzquierdaDerecha == 0) || (PersonajeIzquierdaDerecha!=PersonajeIzquierdaDerecha_pasada)){
-			//				contadorx = 0;
-			//			}else if (PersonajeIzquierdaDerecha==PersonajeIzquierdaDerecha_pasada){
-			//				contadorx +=1;
-			//				contadorx= contadorx%6;
-			//			}
-
-			if(contadorx++ >= 3){
-				posicionPersonajeX += PersonajeIzquierdaDerecha;
-				posicionPersonajeX =  (posicionPersonajeX%16) ;
-				contadorx=0;
-			}
-
-			PersonajeIzquierdaDerecha_pasada = PersonajeIzquierdaDerecha;
-
-
-			if(posicionPersonajeY){
-				display_set_pos(0x00 + posicionPersonajeX_pasada );
-				display_send_data(' ');//d32
-				if(posicionPersonajeY != posicionPersonajeY_pasada){
-					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+				}else{
+					display_set_pos(0x40 + posicionPersonajeX_pasada);
 					display_send_data(' ');//d32
+					if(posicionPersonajeY != posicionPersonajeY_pasada){
+						display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_send_data(' ');//d32
+					}
+					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
+					respuesta = display_get_data();
+					PremiosConseguidos+= (respuesta=='P');
+					Vidas-= (respuesta=='L');
+					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
+					display_send_data(0);
 				}
-				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
-				respuesta = display_get_data();
-				PremiosConseguidos+= (respuesta=='P');
-				Vidas-= (respuesta=='L');
-				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
-				display_send_data(0);
+				posicionMundo_pasada = posicionMundo;
+				posicionPersonajeY_pasada = posicionPersonajeY;
+				posicionPersonajeX_pasada =(posicionPersonajeX+posicionMundo)%40;
+				//REFRESCO PERSONAJE  END
 
-			}else{
-				display_set_pos(0x40 + posicionPersonajeX_pasada);
-				display_send_data(' ');//d32
-				if(posicionPersonajeY != posicionPersonajeY_pasada){
-					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
-					display_send_data(' ');//d32
-				}
-				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
-				respuesta = display_get_data();
-				PremiosConseguidos+= (respuesta=='P');
-				Vidas-= (respuesta=='L');
-				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
-				display_send_data(0);
+
+
+
 			}
-			posicionMundo_pasada = posicionMundo;
-			posicionPersonajeY_pasada = posicionPersonajeY;
-			posicionPersonajeX_pasada =(posicionPersonajeX+posicionMundo)%40;
-			//REFRESCO PERSONAJE  END
 
 
+			if(flag_refresco_mundo){
+				//display_send_cmd(0b01100); //mostrar pantalla
+
+				display_send_cmd(0b11000); //moverse a la izquierda
+				posicionMundo += 1;
+				posicionMundo=posicionMundo%40;
+
+				flag_refresco_mundo = 0;
+
+				//			posicionPersonajeY=PersonajeArribaAbajo==1? 1 : PersonajeArribaAbajo==-1 ? 0 : posicionPersonajeY;
+				//
+				//
+				//						//			if((PersonajeIzquierdaDerecha == 0) || (PersonajeIzquierdaDerecha!=PersonajeIzquierdaDerecha_pasada)){
+				//						//				contadorx = 0;
+				//						//			}else if (PersonajeIzquierdaDerecha==PersonajeIzquierdaDerecha_pasada){
+				//						//				contadorx +=1;
+				//						//				contadorx= contadorx%6;
+				//						//			}
+				//
+				//			posicionPersonajeX += PersonajeIzquierdaDerecha;
+				//			posicionPersonajeX =  (posicionPersonajeX%16) ;
+				//						PersonajeIzquierdaDerecha_pasada = PersonajeIzquierdaDerecha;
+				//		}
 
 
-		}
-
-
-		if(flag_refresco_mundo){
-			//display_send_cmd(0b01100); //mostrar pantalla
-
-			display_send_cmd(0b11000); //moverse a la izquierda
-			posicionMundo += 1;
-			posicionMundo=posicionMundo%40;
-
-			flag_refresco_mundo = 0;
-
-			//			posicionPersonajeY=PersonajeArribaAbajo==1? 1 : PersonajeArribaAbajo==-1 ? 0 : posicionPersonajeY;
-			//
-			//
-			//						//			if((PersonajeIzquierdaDerecha == 0) || (PersonajeIzquierdaDerecha!=PersonajeIzquierdaDerecha_pasada)){
-			//						//				contadorx = 0;
-			//						//			}else if (PersonajeIzquierdaDerecha==PersonajeIzquierdaDerecha_pasada){
-			//						//				contadorx +=1;
-			//						//				contadorx= contadorx%6;
-			//						//			}
-			//
-			//			posicionPersonajeX += PersonajeIzquierdaDerecha;
-			//			posicionPersonajeX =  (posicionPersonajeX%16) ;
-			//						PersonajeIzquierdaDerecha_pasada = PersonajeIzquierdaDerecha;
-			//		}
-
-
-			if(posicionPersonajeY){
-				display_set_pos(0x00 + posicionPersonajeX_pasada );
-				display_send_data(' ');//d32
-				if(posicionPersonajeY != posicionPersonajeY_pasada){
-					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+				if(posicionPersonajeY){
+					display_set_pos(0x00 + posicionPersonajeX_pasada );
 					display_send_data(' ');//d32
-				}
-				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
-				respuesta = display_get_data();
-				PremiosConseguidos+= respuesta=='P';
-				Vidas-= respuesta=='L';
-				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
-				display_send_data(0);
+					if(posicionPersonajeY != posicionPersonajeY_pasada){
+						display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_send_data(' ');//d32
+					}
+					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
+					respuesta = display_get_data();
+					PremiosConseguidos+= respuesta=='P';
+					Vidas-= respuesta=='L';
+					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
+					display_send_data(0);
 
-			}else{
-				display_set_pos(0x40 + posicionPersonajeX_pasada);
-				display_send_data(' ');//d32
-				if(posicionPersonajeY != posicionPersonajeY_pasada){
-					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
+				}else{
+					display_set_pos(0x40 + posicionPersonajeX_pasada);
 					display_send_data(' ');//d32
+					if(posicionPersonajeY != posicionPersonajeY_pasada){
+						display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_send_data(' ');//d32
+					}
+					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
+					respuesta = display_get_data();
+					PremiosConseguidos+= respuesta=='P';
+					Vidas-= respuesta=='L';
+					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
+					display_send_data(0);
 				}
-				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
-				respuesta = display_get_data();
-				PremiosConseguidos+= respuesta=='P';
-				Vidas-= respuesta=='L';
-				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
-				display_send_data(0);
-			}
-			posicionMundo_pasada = posicionMundo;
-			posicionPersonajeY_pasada = posicionPersonajeY;
-			posicionPersonajeX_pasada =(posicionPersonajeX+posicionMundo)%40;
-			//REFRESCO PERSONAJE  END
+				posicionMundo_pasada = posicionMundo;
+				posicionPersonajeY_pasada = posicionPersonajeY;
+				posicionPersonajeX_pasada =(posicionPersonajeX+posicionMundo)%40;
+				//REFRESCO PERSONAJE  END
 
 
-			sprintf(mensaje, "De_Iz: %d\n\rAr_Ab: %d\n\r",
-					PersonajeIzquierdaDerecha,
-					PersonajeArribaAbajo);
+				sprintf(mensaje, "De_Iz: %d\n\rAr_Ab: %d\n\r",
+						PersonajeIzquierdaDerecha,
+						PersonajeArribaAbajo);
 
-			HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
 
 
 
-			//display_clear();
-			//display_set_pos(0x00);
-			//printf( "MagField mx:%1.0f\nmy:%1.0f mz:%1.0f", (float)local_mag.x-calibracionx,(float)local_mag.y-calibraciony,(float)local_mag.z-calibracionz);
-			//float valorz = ((float)lectura_acelerometro_1.z+(float)lectura_acelerometro_2.z)/200.0f;
-			//float valory = ((float)lectura_acelerometro_1.y-(float)lectura_acelerometro_2.y)/200.0f;
-			//float valorx = (-(float)lectura_acelerometro_1.x-(float)lectura_acelerometro_2.x)/200.0f;
-			/*sprintf(mensaje, "x:%.2f\t%.2f\n\ry:%.2f\t%.2f\n\rz:%.2f\t%.2f\n\r",
+				//display_clear();
+				//display_set_pos(0x00);
+				//printf( "MagField mx:%1.0f\nmy:%1.0f mz:%1.0f", (float)local_mag.x-calibracionx,(float)local_mag.y-calibraciony,(float)local_mag.z-calibracionz);
+				//float valorz = ((float)lectura_acelerometro_1.z+(float)lectura_acelerometro_2.z)/200.0f;
+				//float valory = ((float)lectura_acelerometro_1.y-(float)lectura_acelerometro_2.y)/200.0f;
+				//float valorx = (-(float)lectura_acelerometro_1.x-(float)lectura_acelerometro_2.x)/200.0f;
+				/*sprintf(mensaje, "x:%.2f\t%.2f\n\ry:%.2f\t%.2f\n\rz:%.2f\t%.2f\n\r",
 					(float)lectura_acelerometro_1.x/100.0f,
 					(float)lectura_acelerometro_2.x/100.0f,
 					(float)lectura_acelerometro_1.y/100.0f,
@@ -583,13 +587,14 @@ int main(void)
 					(float)lectura_acelerometro_1.z/100.0f,
 					(float)lectura_acelerometro_2.z/100.0f);*/
 
-			/*sprintf(mensaje, "x:%.2f\n\ry:%.2f\n\r",
+				/*sprintf(mensaje, "x:%.2f\n\ry:%.2f\n\r",
 					valorx,
 					valory);
 			HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-			 */
+				 */
 
 
+			}
 		}
 		if(Vidas==0){
 			GAMEOVER=1;
