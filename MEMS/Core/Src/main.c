@@ -276,11 +276,11 @@ int main(void)
 
 	Dificultad_Establecida = medio;
 
-	char lec;
-	display_set_pos(0x00);
-	display_send_data(u);
-	display_set_pos(0x00);
-	lec = display_get_data();
+	//char lec;
+	//display_set_pos(0x00);
+	//display_send_data(0u);
+	//display_set_pos(0x00);
+	//lec = display_get_data();
 
 	uint8_t contadorx = 0;
 	uint8_t PersonajeIzquierdaDerecha_pasada = 0;
@@ -473,7 +473,7 @@ int main(void)
 				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 				respuesta = display_get_data();
 				PremiosConseguidos+= (respuesta=='P');
-				Vidas-= (respuesta=='O');
+				Vidas-= (respuesta=='L');
 				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 				display_send_data(0);
 
@@ -487,7 +487,7 @@ int main(void)
 				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 				respuesta = display_get_data();
 				PremiosConseguidos+= (respuesta=='P');
-				Vidas-= (respuesta=='O');
+				Vidas-= (respuesta=='L');
 				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 				display_send_data(0);
 			}
@@ -537,7 +537,7 @@ int main(void)
 				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 				respuesta = display_get_data();
 				PremiosConseguidos+= respuesta=='P';
-				Vidas-= respuesta=='O';
+				Vidas-= respuesta=='L';
 				display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 				display_send_data(0);
 
@@ -551,7 +551,7 @@ int main(void)
 				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 				respuesta = display_get_data();
 				PremiosConseguidos+= respuesta=='P';
-				Vidas-= respuesta=='O';
+				Vidas-= respuesta=='L';
 				display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 				display_send_data(0);
 			}
