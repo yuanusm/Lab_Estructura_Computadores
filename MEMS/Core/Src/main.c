@@ -154,7 +154,7 @@ void Crear_Mundo(void){
 
 	//Llenar con premios
 
-	for(int i = 1; i < 0x28; i++ ){
+	for(int i = 1; i < 0x27; i++ ){
 		HAL_RNG_GenerateRandomNumber(&hrng, &randomNumber);
 		randomNumber=(randomNumber%100)+1;
 		//Genera numero random de 32bits segun un voltaje analogico medido
@@ -298,6 +298,36 @@ int main(void)
 	sprintf(mensaje, "SCORE:0\n LIFE:3\n");
 	HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
 
+
+
+	//	uint8_t P=0, O=0;
+	//	for(uint8_t i =0; i <= 39;i++){
+	//		for(uint8_t j =0;j <= 1;j++){
+	//			display_set_pos(0x00 + i + j*(0x40));
+	//
+	//			if(display_get_data()=='P'){
+	//				P++;
+	//			}
+	//			display_set_pos(0x00 + i + j*(0x40));
+	//			if(display_get_data()=='L'){
+	//				O++;
+	//			}
+	//			sprintf(mensaje, "P:%u\tO:%u\n\r",P,O);
+	//			HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+	//
+	//		}
+	//	}
+	//	char mapa[2][41] = {0};
+	//	for(uint8_t j=0;j<2;j++)
+	//		for(uint8_t i=0;i<40;i++){
+	//			display_set_pos(i+j*0x40);
+	//			char c=display_get_data();
+	//			mapa[j][i]=(c=='P'||c=='L')?c:'.';
+	//		}
+	//	for(uint8_t j=0;j<2;j++){
+	//		sprintf(mensaje,"%s\n\r",mapa[j]);
+	//		HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+	//	}
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -316,26 +346,16 @@ int main(void)
 				StartGame = 1;
 			}
 		} if (GAMEOVER == 0 && StartGame==0){
-
-
-
-
-
 			if(flag_timer_100){
-
-
 				++contador_segundos;
-
-
-
 				if( (++contador_terceros) == 600){
 					GAMEOVER=1;
 					contador_terceros=0;
 				}
-				sprintf(mensaje, "segundos:%u\n",contador_terceros);
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-
+				if(!(contador_terceros%200)){
+					sprintf(mensaje, "Segundos:%u\n",contador_terceros/10);
+					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+				}
 
 				lectura_acelerometro_1 = Accelero_Sensor_Handler(IKS01A2_LSM6DSL_0);
 				lectura_acelerometro_2 = Accelero_Sensor_Handler(IKS01A2_LSM303AGR_ACC_0);
@@ -380,7 +400,6 @@ int main(void)
 
 				//REFRESCO PERSONAJE  BEGIN
 
-				posicionPersonajeY=PersonajeArribaAbajo==1? 1 : PersonajeArribaAbajo==-1 ? 0 : posicionPersonajeY;
 
 
 				//			if((PersonajeIzquierdaDerecha == 0) || (PersonajeIzquierdaDerecha!=PersonajeIzquierdaDerecha_pasada)){
@@ -390,6 +409,7 @@ int main(void)
 				//				contadorx= contadorx%6;
 				//			}
 
+				posicionPersonajeY=PersonajeArribaAbajo==1? 1 : PersonajeArribaAbajo==-1 ? 0 : posicionPersonajeY;
 				if(contadorx++ >= 3){
 					posicionPersonajeX += PersonajeIzquierdaDerecha;
 					posicionPersonajeX =  (posicionPersonajeX%16) ;
@@ -399,11 +419,12 @@ int main(void)
 				PersonajeIzquierdaDerecha_pasada = PersonajeIzquierdaDerecha;
 
 
-				if(posicionPersonajeY){
-					display_set_pos(0x00 + posicionPersonajeX_pasada );
+				if(posicionPersonajeY ){
+					display_set_pos((posicionPersonajeY_pasada ? 0x00 : 0x40) + posicionPersonajeX_pasada);
 					display_send_data(' ');//d32
 					if(posicionPersonajeY != posicionPersonajeY_pasada){
-						display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						//display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_set_pos(0x40 + posicionPersonajeX_pasada);
 						display_send_data(' ');//d32
 					}
 					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
@@ -425,10 +446,11 @@ int main(void)
 					display_send_data(0);
 
 				}else{
-					display_set_pos(0x40 + posicionPersonajeX_pasada);
+					display_set_pos((posicionPersonajeY_pasada ? 0x00 : 0x40) + posicionPersonajeX_pasada);
 					display_send_data(' ');//d32
 					if(posicionPersonajeY != posicionPersonajeY_pasada){
-						display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_set_pos(0x00 + posicionPersonajeX_pasada);
+						//display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
 						display_send_data(' ');//d32
 					}
 					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
@@ -480,10 +502,11 @@ int main(void)
 
 
 				if(posicionPersonajeY){
-					display_set_pos(0x00 + posicionPersonajeX_pasada );
+					display_set_pos((posicionPersonajeY_pasada ? 0x00 : 0x40) + posicionPersonajeX_pasada);
 					display_send_data(' ');//d32
 					if(posicionPersonajeY != posicionPersonajeY_pasada){
-						display_set_pos(0x40 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_set_pos(0x40 + posicionPersonajeX_pasada);
+						//display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
 						display_send_data(' ');//d32
 					}
 					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
@@ -503,10 +526,11 @@ int main(void)
 					display_send_data(0);
 
 				}else{
-					display_set_pos(0x40 + posicionPersonajeX_pasada);
+					display_set_pos((posicionPersonajeY_pasada ? 0x00 : 0x40) + posicionPersonajeX_pasada);
 					display_send_data(' ');//d32
 					if(posicionPersonajeY != posicionPersonajeY_pasada){
-						display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
+						display_set_pos(0x00 + posicionPersonajeX_pasada);
+						//display_set_pos(0x00 + (posicionPersonajeX+posicionMundo_pasada)%40);
 						display_send_data(' ');//d32
 					}
 					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
