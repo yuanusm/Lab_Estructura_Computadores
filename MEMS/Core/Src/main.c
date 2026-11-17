@@ -253,12 +253,13 @@ int main(void)
 
 	char mensaje[100];
 
+
 	//BSP_I2C1_ReadReg(0x1E<<1, 0x4F, (uint8_t*)&who_i, 1);
 
 	uint8_t contador_segundos = 0;
 	uint8_t Vidas = 3;
 	char respuesta ;
-	uint8_t contador_terceros = 0;
+	uint16_t contador_terceros = 0;
 	flag_refresco_mundo = 0;
 	flag_timer_100 = 0;
 	flag_conteo = 0;
@@ -266,6 +267,7 @@ int main(void)
 
 	setvbuf(stdout, (char*)NULL, _IONBF, 0); //pareciera que no sirve esta linea dado el poco entendimiento que tenemos acerca de ella pero sin esto el codigo no funciona para la escritura de caracteres
 	uint8_t GAMEOVER =0;
+	uint8_t StartGame = 1;
 	display_init();	//inicia comandos de inicializacion del  display
 	display_send_cmd(0x0C); //esconde el cursor del display
 	display_set_pos(0x00); // mueve el cursor a la posicion 00
@@ -293,6 +295,9 @@ int main(void)
 	Crear_Mundo();
 	display_send_cmd(0b1100); // vuelve a encender el display
 
+	sprintf(mensaje, "SCORE:0\n LIFE:3\n");
+	HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -306,25 +311,14 @@ int main(void)
 		if(GAMEOVER){
 			if(!Refresh){
 				display_clear();
-				printf("Score:%d\n\rGAME OVER",PremiosConseguidos);
+				printf("Score:%d\n\r   GAME OVER",PremiosConseguidos);
 				Refresh = (++Refresh) % 1000;
+				StartGame = 1;
 			}
-		} if (GAMEOVER == 0){
+		} if (GAMEOVER == 0 && StartGame==0){
 
 
-			if(flag_timer_data){
-				if(comando=='\n' || comando=='\r' ||indice == 10){
 
-					for(uint8_t i = 0; i<10 ;i++){
-						comando_recibido[i] = buffer[i];
-						buffer[i] = 0;
-					}
-
-					indice = 0;
-
-				}
-				flag_timer_data = 0;
-			}
 
 
 			if(flag_timer_100){
@@ -334,11 +328,12 @@ int main(void)
 
 
 
-				if(contador_terceros++>=600){
+				if( (++contador_terceros) == 600){
 					GAMEOVER=1;
 					contador_terceros=0;
 				}
-
+				sprintf(mensaje, "segundos:%u\n",contador_terceros);
+				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
 
 
 
@@ -375,73 +370,10 @@ int main(void)
 					flag_refresco_mundo = 1;
 					contador_segundos = 0;
 				}
-				if(contador_terceros == 30 ){
-					//flag_pantalla = 0;
-					contador_terceros = 0;
-				}
 				flag_timer_100 = 0;
 
 
-				if(!strcmp(comando_recibido,"S\n")){ // Comando S de Start game
 
-					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					//flag_conteo = 1; //Flags de iniciar calibracion
-					//indice_conteo = 0;
-
-					limpiar_buffer_comando();
-
-
-				}else if(!strcmp(comando_recibido,"R\n")){ // Comando R de reiniciar
-
-					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					HAL_NVIC_SystemReset();
-
-					limpiar_buffer_comando();
-
-				}else if(!strcmp(comando_recibido,"E\n")){ // Comando S de Start game
-
-					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					Dificultad_Establecida = facil;
-					contador_segundos = 0;
-					limpiar_buffer_comando();
-
-
-				}else if(!strcmp(comando_recibido,"M\n")){ // Comando S de Start game
-
-					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					Dificultad_Establecida = medio;
-					contador_segundos = 0;
-					limpiar_buffer_comando();
-
-
-				}else if(!strcmp(comando_recibido,"H\n")){ // Comando S de Start game
-
-					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					Dificultad_Establecida = dificil;
-					contador_segundos = 0;
-					limpiar_buffer_comando();
-
-
-				} else if(strcmp(comando_recibido,"\0\0\0\0") ){
-
-					sprintf(mensaje, "Mensaje Desconocido \n\r%c",0);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
-					HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
-
-					limpiar_buffer_comando();
-				}
 
 
 
@@ -476,8 +408,19 @@ int main(void)
 					}
 					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 					respuesta = display_get_data();
-					PremiosConseguidos+= (respuesta=='P');
-					Vidas-= (respuesta=='L');
+
+					if(respuesta=='P'){
+						PremiosConseguidos+= 1;
+						sprintf(mensaje, "SCORE:%u\n",PremiosConseguidos);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+					if(respuesta=='L'){
+						Vidas-= 1;
+						sprintf(mensaje, "LIFE:%u\n",Vidas);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+
+
 					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 					display_send_data(0);
 
@@ -490,8 +433,17 @@ int main(void)
 					}
 					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 					respuesta = display_get_data();
-					PremiosConseguidos+= (respuesta=='P');
-					Vidas-= (respuesta=='L');
+					if(respuesta=='P'){
+						PremiosConseguidos+= 1;
+						sprintf(mensaje, "SCORE:%u\n",PremiosConseguidos);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+					if(respuesta=='L'){
+						Vidas-= 1;
+						sprintf(mensaje, "LIFE:%u\n",Vidas);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+
 					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 					display_send_data(0);
 				}
@@ -499,10 +451,6 @@ int main(void)
 				posicionPersonajeY_pasada = posicionPersonajeY;
 				posicionPersonajeX_pasada =(posicionPersonajeX+posicionMundo)%40;
 				//REFRESCO PERSONAJE  END
-
-
-
-
 			}
 
 
@@ -540,8 +488,17 @@ int main(void)
 					}
 					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 					respuesta = display_get_data();
-					PremiosConseguidos+= respuesta=='P';
-					Vidas-= respuesta=='L';
+					if(respuesta=='P'){
+						PremiosConseguidos+= 1;
+						sprintf(mensaje, "SCORE:%u\n",PremiosConseguidos);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+					if(respuesta=='L'){
+						Vidas-= 1;
+						sprintf(mensaje, "LIFE:%u\n",Vidas);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+
 					display_set_pos(0x00 + (posicionPersonajeX+posicionMundo)%40);
 					display_send_data(0);
 
@@ -554,8 +511,17 @@ int main(void)
 					}
 					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 					respuesta = display_get_data();
-					PremiosConseguidos+= respuesta=='P';
-					Vidas-= respuesta=='L';
+					if(respuesta=='P'){
+						PremiosConseguidos += 1;
+						sprintf(mensaje, "SCORE:%u\n",PremiosConseguidos);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+					if(respuesta=='L'){
+						Vidas -= 1;
+						sprintf(mensaje, "LIFE:%u\n",Vidas);
+						HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+					}
+
 					display_set_pos(0x40 + (posicionPersonajeX+posicionMundo)%40);
 					display_send_data(0);
 				}
@@ -565,11 +531,11 @@ int main(void)
 				//REFRESCO PERSONAJE  END
 
 
-				sprintf(mensaje, "De_Iz: %d\n\rAr_Ab: %d\n\r",
-						PersonajeIzquierdaDerecha,
-						PersonajeArribaAbajo);
+				//				sprintf(mensaje, "De_Iz: %d\n\rAr_Ab: %d\n\r",
+				//						PersonajeIzquierdaDerecha,
+				//						PersonajeArribaAbajo);
 
-				HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+				//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
 
 
 
@@ -595,6 +561,81 @@ int main(void)
 
 
 			}
+		}
+		if(flag_timer_data){
+			if(comando=='\n' || comando=='\r' ||indice == 10){
+
+				for(uint8_t i = 0; i<10 ;i++){
+					comando_recibido[i] = buffer[i];
+					buffer[i] = 0;
+				}
+
+				indice = 0;
+
+			}
+		}
+		flag_timer_data = 0;
+		if(!strcmp(comando_recibido,"S\n")){ // Comando S de Start game
+
+			//sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+			//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			//flag_conteo = 1; //Flags de iniciar calibracion
+			//indice_conteo = 0;
+			StartGame = 0;
+			GAMEOVER = 0;
+
+			limpiar_buffer_comando();
+
+
+		}else if(!strcmp(comando_recibido,"R\n")){ // Comando R de reiniciar
+
+			//sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+			//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			HAL_NVIC_SystemReset();
+
+			limpiar_buffer_comando();
+
+		}else if(!strcmp(comando_recibido,"E\n")){ // Comando S de Start game
+
+			//sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+			//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			Dificultad_Establecida = facil;
+			contador_segundos = 0;
+			limpiar_buffer_comando();
+
+
+		}else if(!strcmp(comando_recibido,"M\n")){ // Comando S de Start game
+
+			//sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+			//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			Dificultad_Establecida = medio;
+			contador_segundos = 0;
+			limpiar_buffer_comando();
+
+
+		}else if(!strcmp(comando_recibido,"H\n")){ // Comando S de Start game
+
+			//sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+			//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			Dificultad_Establecida = dificil;
+			contador_segundos = 0;
+			limpiar_buffer_comando();
+
+
+		} else if(strcmp(comando_recibido,"\0\0\0\0") ){
+
+			sprintf(mensaje, "Mensaje Desconocido \n\r%c",0);
+			HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			//sprintf(mensaje, "Comando: %c \n\r",comando_recibido[0]==0?1:comando_recibido[0]);
+			//HAL_UART_Transmit(&huart2,(uint8_t*)mensaje,strlen(mensaje),HAL_MAX_DELAY);
+
+			limpiar_buffer_comando();
 		}
 		if(Vidas==0){
 			GAMEOVER=1;
